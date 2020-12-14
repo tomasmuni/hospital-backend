@@ -10,18 +10,19 @@ const app = express();
 //CORS
 app.use(cors());
 
+//Lectura y Parseo de body
+app.use(express.json());
+
 //Base de datos
 dbconnection();
 
-//Username
-//usr: mean_user 
-//psw: pmJNBBBAktmFHBsy
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
-app.get('/', (req,res) => {
-
-    res.status(200).json({ok: true, msg:'Servidor escuchando'})
-
-});
-app.listen(process.PORT, ()=> {
+app.listen(process.env.PORT, ()=> {
     console.log('servidor corriendo puerto ', process.env.PORT)
 });
+
+//Username
+//usr: mean_user 
+//psw: FmGE6J04y5fAHiLJ
