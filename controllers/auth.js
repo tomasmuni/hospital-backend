@@ -1,7 +1,8 @@
 const Usuario = require('../models/usuario');
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
-const { generateJWT } = require('../helpers/jwt')
+const { generateJWT } = require('../helpers/jwt');
+const { verify } = require('../helpers/google-verify');
 
 
 
@@ -50,6 +51,48 @@ const login = async(req,res = response) =>  {
     }
 };
 
+const googleSignIn = async (req, res = response) => {
+
+    
+    try {
+        const _token = req.body.token;
+        var {name, email, picture } = await verify(_token);
+
+        usuarioDB = await Usuario.findOne({email});
+        let usuario;
+
+        if (!usuarioDB) {
+            usuario = new Usuario({
+                nombre: name,
+                email,
+                password: '@@@',
+                img: picture,
+                google: true
+            })
+        } else {
+            usuario = usuarioDB;
+            usuario.google = true;
+        }
+        console.log(usuarioDB)
+        await usuario.save();
+
+        //generar Token
+        var token = await generateJWT(usuario.id);
+
+
+        res.status(200).json({
+            token
+        })
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado...'
+        })
+    }
+    
+}
+
 module.exports = {
     login,
+    googleSignIn
 }
