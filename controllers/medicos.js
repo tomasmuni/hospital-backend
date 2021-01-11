@@ -57,10 +57,33 @@ const createMedico = async(req, res = response) => {
 
 }
 
-const updateMedico = (req, res = response) => {
+const updateMedico = async(req, res = response) => {
+
+    const _medicoId = req.params.id;
 
     try {
-        
+        const _medicoDB = await Medico.findById(_medicoId);
+
+    if (!_medicoDB) {
+        return res.status(404).json({
+            ok: false,
+            msg: 'El medico que intenta editar no se encuentra registrado.'
+        })
+    }
+
+    const _editMedico = {
+        ...req.body,
+        usuario: req.id,
+    }
+
+    const updateMedico = await Medico.findByIdAndUpdate(_medicoId, _editMedico, {new: true});
+
+    res.status(200).json({
+        ok:true,
+        medico: updateMedico
+    })
+
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -72,9 +95,29 @@ const updateMedico = (req, res = response) => {
 
 }
 
-const deleteMedico = (req, res = response) => {
+const deleteMedico = async(req, res = response) => {
 
     try {
+
+        const medicoId = req.params.id;
+
+        const medicoDB = await Medico.findById(medicoId);
+
+        if (!medicoDB) {
+
+            return res.status(404).json({
+                ok: false,
+                msg: 'El medico que intenta eliminar no se encuentra registrado.'
+            });
+        }
+
+        await Medico.findByIdAndDelete(medicoId);
+
+        res.json({
+            ok: true,
+            msg: 'El medico fue eliminado.'
+        })
+
         
     } catch (error) {
         console.log(error);

@@ -52,9 +52,35 @@ const createHospital = async(req, res = response) => {
 
 }
 
-const updateHospital = (req, res = response) => {
+const updateHospital = async (req, res = response) => {
 
+    const hospitalId = req.params.id;
+    const usuarioId = req.id;
     try {
+
+        const _hospitalDB = await Hospital.findById(hospitalId);
+
+        if (!_hospitalDB) {
+
+            return res.status(404).json({
+                ok:false,
+                msg: 'El hospital no existe'
+            })
+        }
+
+        const editHospital = {
+            ...req.body,
+            usuario: usuarioId
+
+        }
+
+       const hospitalResponse =  await Hospital.findByIdAndUpdate(hospitalId, editHospital, {new: true});
+
+       res.status(200).json({
+           ok: true,
+           hospital: hospitalResponse
+       })
+        
         
     } catch (error) {
         console.log(error);
@@ -67,9 +93,25 @@ const updateHospital = (req, res = response) => {
 
 }
 
-const deleteHospital = (req, res = response) => {
+const deleteHospital = async(req, res = response) => {
 
+    const hospitalId = req.params.id;
     try {
+
+        const _existHospital = await Hospital.findById(hospitalId);
+
+        if (!_existHospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El hospital que intenta eliminar no existe.'
+            });
+        }
+        await Hospital.findByIdAndDelete(hospitalId);
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'El hospital fue eliminado.'
+        })
         
     } catch (error) {
         console.log(error);
