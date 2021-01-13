@@ -13,7 +13,6 @@ const fileUpload = async (req, res = response) => {
     const _id = req.params.id;
     const updloadValid = ['medicos','usuarios','hospitales'];
 
-    console.log(req.files);
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
@@ -50,7 +49,7 @@ const fileUpload = async (req, res = response) => {
     //Generar nombre archivo
     const nombreArchivo = `${ uuidv4() }.${ fileExt }`;
 
-    const _path = `/uploads/${ _tipo }/.${ nombreArchivo }`;
+    const _path = `./uploads/${ _tipo }/${ nombreArchivo }`;
 
     file.mv(_path, (err) => {
         if (err) {
@@ -61,11 +60,11 @@ const fileUpload = async (req, res = response) => {
             });
         }
 
-        res.send('File uploaded!');
+        // return res.send('File uploaded!');
     });
 
-    actualizarImagen(_tipo, _id, nombreArchivo);
-    res.status(200).json({
+    await actualizarImagen(_tipo, _id, nombreArchivo);
+    return res.status(200).json({
         ok: true,
         msg: 'Archivo subido',
         nombreArchivo
@@ -78,8 +77,8 @@ const getImagen = async (req, res = response) => {
     const _tipo = req.params.tipo;
     const _foto = req.params.id;
 
-    const pathImg = path.join(__dirname, `../uploads/${ _tipo }/.${ _foto }`);
-
+    const pathImg = path.join(__dirname, `../uploads/${ _tipo }/${ _foto }`);
+    console.log(pathImg)
     if(fs.existsSync(pathImg)) {
         res.sendFile(pathImg);
     } else {

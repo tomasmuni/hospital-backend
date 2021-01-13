@@ -95,7 +95,7 @@ const updateUsuarios = async (req, res = response) => {
         //Actualizar usuario
         const {password, google, email, ...campos} = req.body;
 
-        console.log(campos);
+
         if (email !== _usuario.email) {
 
             const existeUsuario = await Usuario.findOne({email});
@@ -109,7 +109,8 @@ const updateUsuarios = async (req, res = response) => {
             }
         }
 
-        campos.email = email;
+        if (!_usuario.google) campos.email = email;
+
         const camposActualizados = await Usuario.findByIdAndUpdate(_id,campos, { new: true});
 
         res.json({

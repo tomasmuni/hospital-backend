@@ -16,12 +16,12 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
     let imagenAntigua;
     switch (tipo) {
         case 'medicos':
-            const medico = Medico.findById(id);
+            const medico = await Medico.findById(id);
             if (!medico) {
                 console.log('El medico no existe')
                 return false
             }
-            imagenAntigua =  `/uploads/medicos/${ medico.img }`;
+            imagenAntigua =  `./uploads/medicos/${ medico.img }`;
            
             borrarImagen(imagenAntigua);
             medico.img = nombreArchivo;
@@ -31,13 +31,13 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
         break;
         case 'usuarios':
 
-            const usuario = Usuario.findById(id);
+            const usuario = await Usuario.findById(id);
             if (!usuario) {
                 console.log('El medico no existe')
                 return false
             }
             
-            imagenAntigua =  `/uploads/usuarios/${ usuario.img }`;
+            imagenAntigua =  `./uploads/usuarios/${ usuario.img }`;
            
             borrarImagen(imagenAntigua);
             usuario.img = nombreArchivo;
@@ -46,13 +46,13 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
         break;
         case 'hospitales':
 
-            const hospital = Hospital.findById(id);
+            const hospital = await Hospital.findById(id);
             if (!hospital) {
                 console.log('El medico no existe')
                 return false
             }
             
-            imagenAntigua =  `/uploads/hospitales/${ hospital.img }`;
+            imagenAntigua =  `./uploads/hospitales/${ hospital.img }`;
            
             borrarImagen(imagenAntigua);
             hospital.img = nombreArchivo;

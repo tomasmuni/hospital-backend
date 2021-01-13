@@ -9,7 +9,7 @@ const router = Router();
 router.use(upload());
 
 router.put('/:tipo/:id',validarJWT, uploads.fileUpload);
-router.get('/:tipo/:id',validarJWT, uploads.getImagen);
+router.get('/:tipo/:id', uploads.getImagen);
 
 
 module.exports = router;
