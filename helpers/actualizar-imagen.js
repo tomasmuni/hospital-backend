@@ -45,10 +45,10 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             return true;
         break;
         case 'hospitales':
-
+            
             const hospital = await Hospital.findById(id);
             if (!hospital) {
-                console.log('El medico no existe')
+                console.log('El hospital no existe')
                 return false
             }
             
@@ -56,6 +56,8 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
            
             borrarImagen(imagenAntigua);
             hospital.img = nombreArchivo;
+            console.log(nombreArchivo);
+            console.log(hospital)
             await hospital.save();
             return true;
         

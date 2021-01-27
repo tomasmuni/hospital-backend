@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { Mongoose } = require("mongoose");
 const Medico = require('../models/medico');
 
 
@@ -6,15 +7,45 @@ const getMedicos = async(req, res = response) => {
 
     try {
         
-        const medicos = await Medico.find().
+
+        const [medicos, total] = await Promise.all([
+            Medico.find().
                             populate('usuario', 'nombre img').
-                            populate('hospital', 'nombre');
+                            populate('hospital', 'nombre'),
+            Medico.countDocuments()
+        ]);
+
+        res.status(200).json({
+            ok: true,
+            medicos,
+            total
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado...'
+        })
+    }
+
+
+}
+const getMedicoById = async(req, res = response) => {
+
+    try {
+        
+        const _id = req.params.id;
+
+        const medico =  await Medico.findById(_id).
+                            populate('usuario', 'nombre img').
+                            populate('hospital', 'nombre img');
+
         
         res.status(200).json({
             ok: true,
-            medicos
-        })
-
+            medico
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -29,15 +60,14 @@ const getMedicos = async(req, res = response) => {
 const createMedico = async(req, res = response) => {
 
     console.log(req.body);
-    const { nombre, hospitalId } = req.body;
+    const { nombre, hospital } = req.body;
     try {
         
         const _medico = new Medico({
-            hospital: hospitalId,
+            hospital: hospital,
             nombre: nombre,
             usuario: req.id
         })
-        console.log(_medico);
         const newMedico = await _medico.save();
 
         res.status(200).json({
@@ -75,7 +105,6 @@ const updateMedico = async(req, res = response) => {
         ...req.body,
         usuario: req.id,
     }
-
     const updateMedico = await Medico.findByIdAndUpdate(_medicoId, _editMedico, {new: true});
 
     res.status(200).json({
@@ -134,5 +163,6 @@ module.exports = {
      deleteMedico,
      createMedico,
      getMedicos,
-     updateMedico
+     updateMedico,
+     getMedicoById
 }

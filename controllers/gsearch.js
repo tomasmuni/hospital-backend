@@ -63,7 +63,7 @@ const getCollectionBystr = async(req,res = response) =>  {
                 })
                 break;
         }
-
+        
         res.status(200).json({
             ok: true,
             response: data

@@ -78,7 +78,6 @@ const getImagen = async (req, res = response) => {
     const _foto = req.params.id;
 
     const pathImg = path.join(__dirname, `../uploads/${ _tipo }/${ _foto }`);
-    console.log(pathImg)
     if(fs.existsSync(pathImg)) {
         res.sendFile(pathImg);
     } else {

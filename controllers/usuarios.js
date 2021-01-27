@@ -7,18 +7,15 @@ const bcrypt = require('bcryptjs')
 const getUsuarios = async(req,res = response) => {
 
     const _desde = Number(req.query.desde) || 0;
-    let usuarios;
-    console.log(_desde);
     try {
 
     const [usuarios, total] = await Promise.all([
             Usuario
-                .find({}, 'nombre email role google')
+                .find({}, 'nombre email role google img')
                 .skip(_desde)
                 .limit(5),
             Usuario.countDocuments()
         ]);
-        console.log(usuarios);
 
         res.status(200).json({
             ok: true,
@@ -145,7 +142,7 @@ const deleteUsuario = async (req, res = response) => {
         await Usuario.findByIdAndDelete(_id);
 
         res.status(200).json({
-            ok: false,
+            ok: true,
             msg: 'Usuario eliminado.'
         })
 
