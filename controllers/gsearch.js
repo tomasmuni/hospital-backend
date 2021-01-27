@@ -16,7 +16,7 @@ const getAllBystr = async(req,res = response) =>  {
              Medico.find({ nombre: regEx}),
              Hospital.find({ nombre: regEx})
         ]);
-
+        console.log(usuarios,medicos,hospitales);
         res.status(200).json({
             ok: true,
             usuarios,
@@ -28,7 +28,7 @@ const getAllBystr = async(req,res = response) =>  {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Login fail.'
+            msg: 'Error inesperado.'
         })
     }
 }

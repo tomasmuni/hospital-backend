@@ -3,6 +3,7 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/jwt');
 const { verify } = require('../helpers/google-verify');
+const { obtenerSideBar } = require('../helpers/sidebar-menu-front');
 
 
 
@@ -39,7 +40,8 @@ const login = async(req,res = response) =>  {
 
         res.json({
             ok: true,
-            token
+            token,
+            menu: obtenerSideBar(_usuario.role)
         })
 
     } catch (error) {
@@ -73,7 +75,6 @@ const googleSignIn = async (req, res = response) => {
             usuario = usuarioDB;
             usuario.google = true;
         }
-        console.log(usuarioDB)
         await usuario.save();
 
         //generar Token
@@ -81,7 +82,8 @@ const googleSignIn = async (req, res = response) => {
 
 
         res.status(200).json({
-            token
+            token,
+            menu: obtenerSideBar(usuario.role)
         })
     } catch (error) {
         res.status(500).json({
@@ -107,7 +109,8 @@ const renewToken = async (req, res = response) => {
     res.status(200).json({
         ok:true,
         token: response[0],
-        usuario: response[1]
+        usuario: response[1],
+        menu: obtenerSideBar(response[1].role)
         
     })
 }

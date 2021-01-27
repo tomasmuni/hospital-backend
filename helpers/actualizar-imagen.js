@@ -56,8 +56,6 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
            
             borrarImagen(imagenAntigua);
             hospital.img = nombreArchivo;
-            console.log(nombreArchivo);
-            console.log(hospital)
             await hospital.save();
             return true;
         
